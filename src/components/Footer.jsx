@@ -8,8 +8,6 @@ import {
 } from "@phosphor-icons/react";
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer className="bg-background text-foreground border-t border-border">
       <div className="max-w-7xl mx-auto px-6 py-16">
