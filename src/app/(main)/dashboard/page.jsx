@@ -264,7 +264,6 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* RECENT LESSONS TABLE CONTAINER */}
       <Card className="overflow-hidden gap-0">
         <CardHeader className="border-b">
           <div className="flex items-center justify-between">
