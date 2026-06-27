@@ -20,7 +20,7 @@ const slides = [
     subtitle: "Real stories. Real lessons. Real growth.",
     image:
       "https://plus.unsplash.com/premium_photo-1716138192476-f34e85ad43c2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    cta: "Explore Public Lessons",
+    cta: "Help to Grow",
   },
   {
     title: "Turn Reflections into Wisdom",
@@ -66,7 +66,7 @@ export default function HeroSlider() {
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <motion.a
-                      href="/register"
+                      href="/add-lesson"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       className="inline-block bg-white text-black font-semibold px-10 py-4 rounded-full text-lg hover:bg-gray-100 transition"

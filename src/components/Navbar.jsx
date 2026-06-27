@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { useSession, signOut } from "@/lib/authClient";
 import { useState } from "react";
@@ -7,10 +6,10 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { clearToken } from "@/lib/token";
+import { Spinner } from "./ui/spinner";
 
 export default function Navbar() {
   const { data: session, isPending } = useSession();
-  const user = session?.user;
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
@@ -27,7 +26,7 @@ export default function Navbar() {
     { href: "/lessons", label: "Public Lessons", protected: false },
     { href: "/dashboard/add-lesson", label: "Add Lesson", protected: true },
     { href: "/dashboard/my-lessons", label: "My Lessons", protected: true },
-    ...(!user?.isPremium
+    ...(!session?.user?.isPremium
       ? [{ href: "/pricing", label: "Pricing", protected: true }]
       : []),
   ];
@@ -49,7 +48,7 @@ export default function Navbar() {
             Home
           </Link>
           {navLinks.map((link) => {
-            if (link.protected && !user) return null;
+            if (link.protected && !session?.user) return null;
             return (
               <Link
                 key={link.href}
@@ -65,8 +64,8 @@ export default function Navbar() {
         {/* Right side */}
         <div className="flex items-center justify-end gap-3">
           {isPending ? (
-            <div className="w-9 h-9 rounded-full bg-gray-200 animate-pulse" />
-          ) : user ? (
+            <Spinner />
+          ) : session?.user ? (
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -74,10 +73,10 @@ export default function Navbar() {
               >
                 <Image
                   src={
-                    user.image ||
-                    `https://ui-avatars.com/api/?name=${user.name}&background=6366f1&color=fff`
+                    session?.user?.image ||
+                    `https://ui-avatars.com/api/?name=${session?.user?.name}&background=6366f1&color=fff`
                   }
-                  alt={user?.name}
+                  alt={session?.user?.name || "User DP"}
                   width={100}
                   height={100}
                   className="w-9 h-9 rounded-full object-cover border-2 border-indigo-100"
@@ -94,12 +93,12 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 z-50">
                     <div className="px-4 py-2 border-b border-gray-100">
                       <p className="text-sm font-semibold text-gray-900 truncate">
-                        {user.name}
+                        {session?.user?.name}
                       </p>
                       <p className="text-xs text-gray-400 truncate">
-                        {user.email}
+                        {session?.user?.email}
                       </p>
-                      {user.isPremium && (
+                      {session?.user?.isPremium && (
                         <span className="inline-block mt-1 text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full font-medium">
                           Premium ⭐
                         </span>
@@ -176,7 +175,7 @@ export default function Navbar() {
             Home
           </Link>
           {navLinks.map((link) => {
-            if (link.protected && !user) return null;
+            if (link.protected && !session?.user) return null;
             return (
               <Link
                 key={link.href}
@@ -188,7 +187,7 @@ export default function Navbar() {
               </Link>
             );
           })}
-          {!user && (
+          {!session?.user && (
             <div className="flex gap-2 pt-2 border-t border-gray-100">
               <Link
                 href="/login"
