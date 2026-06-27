@@ -85,9 +85,9 @@ export default function DashboardLayout({ children }) {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                       isActive
-                        ? "bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300"
+                        ? "bg-primary/10 text-primary"
                         : "hover:bg-gray-100 dark:hover:bg-slate-800"
                     }`}
                   >

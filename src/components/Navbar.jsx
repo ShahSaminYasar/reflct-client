@@ -33,11 +33,11 @@ export default function Navbar() {
 
   return (
     <nav className="w-full bg-white border-b border-gray-100 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between md:grid md:grid-cols-5 gap-5 h-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between md:grid md:grid-cols-5 gap-5 h-18">
         {/* Logo */}
         <Link
           href="/"
-          className="text-2xl font-bold tracking-tight text-gray-900"
+          className="text-3xl font-bold tracking-tight text-gray-900"
         >
           Refl<span className="text-indigo-500">ct</span>
         </Link>
