@@ -76,7 +76,7 @@ export default function DashboardLayout({ children }) {
       {/* Sidebar */}
       <div className="w-72 border-r border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0 hidden md:flex flex-col">
         <div className="flex-1 overflow-auto p-4">
-          <div className="mb-8">
+          <div className="mb-3">
             <nav className="space-y-1">
               {userNavLinks.map((link) => {
                 const Icon = link.icon;
@@ -102,12 +102,9 @@ export default function DashboardLayout({ children }) {
           {/* Admin Section */}
           {isAdmin && (
             <div>
-              <div className="flex items-center gap-2 px-4 mb-3">
-                <ShieldCheck className="w-4 h-4 text-rose-500" />
-                <p className="text-xs uppercase font-semibold text-rose-500">
-                  Admin Panel
-                </p>
-              </div>
+              <p className="text-xs uppercase font-semibold text-primary block pb-2 mb-1 border-b">
+                Admin Panel
+              </p>
               <nav className="space-y-1">
                 {adminNavLinks.map((link) => {
                   const Icon = link.icon;

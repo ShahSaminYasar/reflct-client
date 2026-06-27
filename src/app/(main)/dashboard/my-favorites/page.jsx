@@ -134,7 +134,7 @@ export default function MyFavoritesPage() {
           My Favorites
         </h1>
         <p className="text-xs text-muted-foreground mt-1">
-          Manage your curated collection of lessons and self-reflections.
+          Manage your favourites collection.
         </p>
       </div>
 

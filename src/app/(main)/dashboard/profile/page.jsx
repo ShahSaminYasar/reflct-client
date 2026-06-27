@@ -242,8 +242,7 @@ export default function ProfilePage() {
                 <DialogHeader>
                   <DialogTitle>Edit Profile Info</DialogTitle>
                   <DialogDescription>
-                    Modify your profile representation details. Email
-                    configuration cannot be reassigned.
+                    Make changes and hit save.
                   </DialogDescription>
                 </DialogHeader>
 
@@ -298,7 +297,7 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                <DialogFooter className="gap-2 sm:gap-0">
+                <DialogFooter className="gap-2">
                   <Button
                     type="button"
                     variant="outline"
@@ -331,10 +330,6 @@ export default function ProfilePage() {
           <h2 className="text-xl font-bold tracking-tight">
             My Public Lessons
           </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Publicly accessible knowledge reflections that are viewable across
-            the application.
-          </p>
         </div>
 
         {publicLessons.length === 0 ? (
@@ -355,9 +350,8 @@ export default function ProfilePage() {
             {publicLessons.map((lesson) => (
               <Card
                 key={lesson._id}
-                className="flex flex-col h-full bg-card hover:shadow-md transition-shadow overflow-hidden border"
+                className="flex flex-col h-full bg-card hover:shadow-md transition-shadow overflow-hidden pt-0 max-w-sm mx-auto gap-0"
               >
-                {/* Lesson Header Banner Preview Thumbnail */}
                 <div className="relative aspect-video w-full bg-muted border-b overflow-hidden flex items-center justify-center">
                   {lesson.image ? (
                     <Image
@@ -374,8 +368,7 @@ export default function ProfilePage() {
                   )}
                 </div>
 
-                <CardHeader className="p-4 space-y-2 flex-1">
-                  {/* Category + Tone Meta badges */}
+                <CardHeader className="p-4 space-y-0 flex-1">
                   <div className="flex flex-wrap items-center gap-1.5">
                     <Badge
                       variant="outline"
@@ -429,7 +422,7 @@ export default function ProfilePage() {
 
                 <CardFooter className="p-4 pt-0 border-t bg-muted/20">
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
                     className="w-full text-xs h-9 mt-3"
                     asChild

@@ -1,6 +1,4 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useSession } from "@/lib/authClient";
 import { apiFetch } from "@/lib/apiFetch";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -85,7 +83,14 @@ export default function MyLessonsPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">My Lessons</h1>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+            My Lessons
+          </h1>
+          <p className="text-xs text-muted-foreground mt-1">
+            Manage your posts.
+          </p>
+        </div>
         <Button asChild>
           <Link href="/dashboard/add-lesson">+ Add New Lesson</Link>
         </Button>
@@ -130,7 +135,7 @@ export default function MyLessonsPage() {
                           ? "default"
                           : "destructive"
                       }
-                      className="cursor-pointer"
+                      className="cursor-pointer capitalize"
                       onClick={() =>
                         toggleVisibility(lesson._id, lesson.visibility)
                       }
@@ -146,6 +151,7 @@ export default function MyLessonsPage() {
                           ? "destructive"
                           : "outline"
                       }
+                      className={"capitalize"}
                     >
                       {lesson.accessLevel}
                     </Badge>

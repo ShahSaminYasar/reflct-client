@@ -39,7 +39,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Image from "next/image";
-import { LockIcon } from "@phosphor-icons/react";
+import { HeartIcon, LockIcon, StarIcon } from "@phosphor-icons/react";
+import moment from "moment";
 
 const CATEGORIES = [
   "Personal Growth",
@@ -160,36 +161,30 @@ export default function PublicLessonsPage() {
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
       {/* Page Title Header */}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Public Reflections
-        </h1>
+        <h1 className="text-3xl font-bold tracking-tight">Public Lessons</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Browse public growth lessons, community insights, and shared knowledge
-          archives.
+          Browse lessons and reflections shared by the community
         </p>
       </div>
 
-      {/* SEARCH / FILTERS / SORT OPTIONS TOOLBAR */}
       <div className="p-4 rounded-xl border bg-card/70 shadow-sm flex flex-col gap-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
-          {/* Keyword Search Input */}
+        <div className="flex flex-row flex-wrap gap-3 items-center">
           <div className="relative lg:col-span-4">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search title keywords..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-9 h-10"
+              className="pl-9 w-full max-w-sm"
             />
           </div>
 
-          {/* Category Dropdown */}
-          <div className="lg:col-span-2">
+          <div>
             <Select
               value={currentCategory}
               onValueChange={(val) => updateQueryParams({ category: val })}
             >
-              <SelectTrigger className="h-10 text-xs">
+              <SelectTrigger className={"cursor-pointer min-w-40"}>
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
@@ -203,13 +198,12 @@ export default function PublicLessonsPage() {
             </Select>
           </div>
 
-          {/* Emotional Tone Dropdown */}
-          <div className="lg:col-span-2">
+          <div>
             <Select
               value={currentTone}
               onValueChange={(val) => updateQueryParams({ emotionalTone: val })}
             >
-              <SelectTrigger className="h-10 text-xs">
+              <SelectTrigger className={"cursor-pointer min-w-40"}>
                 <SelectValue placeholder="Emotional Tone" />
               </SelectTrigger>
               <SelectContent>
@@ -223,13 +217,12 @@ export default function PublicLessonsPage() {
             </Select>
           </div>
 
-          {/* Sort Control */}
-          <div className="lg:col-span-2">
+          <div>
             <Select
               value={currentSort}
               onValueChange={(val) => updateQueryParams({ sort: val })}
             >
-              <SelectTrigger className="h-10 text-xs">
+              <SelectTrigger className={"cursor-pointer min-w-40"}>
                 <SelectValue placeholder="Sort Order" />
               </SelectTrigger>
               <SelectContent>
@@ -240,23 +233,14 @@ export default function PublicLessonsPage() {
           </div>
 
           {/* Reset Action Button */}
-          <div className="lg:col-span-2 flex">
-            {currentSearch ||
-            currentCategory !== "all" ||
-            currentTone !== "all" ||
-            currentSort !== "newest" ? (
-              <Button
-                variant="outline"
-                onClick={handleClearFilters}
-                className="w-full h-10 text-xs"
-              >
+          <div className="ml-auto flex">
+            {(currentSearch ||
+              currentCategory !== "all" ||
+              currentTone !== "all" ||
+              currentSort !== "newest") && (
+              <Button variant="outline" onClick={handleClearFilters}>
                 <FilterX className="w-3.5 h-3.5 mr-1.5" /> Reset Filters
               </Button>
-            ) : (
-              <div className="w-full text-xs text-muted-foreground flex items-center justify-center border border-dashed rounded-lg bg-muted/20 select-none px-2 py-1">
-                <SlidersHorizontal className="w-3.5 h-3.5 mr-1.5" /> Filtering
-                Ready
-              </div>
             )}
           </div>
         </div>
@@ -319,7 +303,7 @@ export default function PublicLessonsPage() {
             return (
               <Card
                 key={lesson?._id}
-                className="flex flex-col h-full overflow-hidden transition-shadow hover:shadow-lg pt-0"
+                className="flex flex-col h-full overflow-hidden transition-shadow hover:shadow-lg pt-0 gap-0 max-w-sm mx-auto"
               >
                 {/* Fixed Image Wrapper Box Area */}
                 <div className="relative">
@@ -370,7 +354,7 @@ export default function PublicLessonsPage() {
                 </div>
 
                 {/* Primary Information Header Content Section info row block element */}
-                <CardHeader className="p-4 space-y-2">
+                <CardHeader className="p-4 space-y-1">
                   <div className="flex flex-wrap items-center gap-1.5">
                     <Badge
                       variant="outline"
@@ -387,7 +371,7 @@ export default function PublicLessonsPage() {
                   </div>
 
                   <CardTitle
-                    className={`text-base font-bold line-clamp-1 leading-snug pt-0.5 ${isLockedPremium ? "opacity-40 select-none" : ""}`}
+                    className={`text-lg font-bold line-clamp-1 leading-snug pt-0.5 ${isLockedPremium ? "opacity-40 select-none" : ""}`}
                     title={lesson.title}
                   >
                     {lesson.title}
@@ -401,34 +385,39 @@ export default function PublicLessonsPage() {
                   </CardDescription>
                 </CardHeader>
 
-                <CardContent className="px-4 py-3 border-t">
-                  <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-2.5">
-                    <div className="flex items-center gap-2">
-                      <span className="flex items-center gap-0.5">
-                        👍 {lesson.likesCount || 0}
-                      </span>
-                      <span className="flex items-center gap-0.5">
-                        ⭐ {lesson.favoritesCount || 0}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      <span>
-                        {new Date(lesson.createdAt).toLocaleDateString(
-                          undefined,
-                          {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          },
-                        )}
-                      </span>
-                    </div>
+                <CardContent className="px-4 pb-3 justify-center h-full gap-2 flex flex-col">
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center gap-0.5">
+                      <HeartIcon size={14} weight="duotone" color="#c85c32" />{" "}
+                      {lesson.likesCount || 0}
+                    </span>
+                    <span className="flex items-center gap-0.5">
+                      <StarIcon size={14} weight="duotone" color="#d5971a" />{" "}
+                      {lesson.favoritesCount || 0}
+                    </span>
                   </div>
 
-                  <div className="text-[10px] font-medium text-muted-foreground flex items-center gap-1">
-                    <span>By:</span>
-                    <span className="text-foreground">Reflct User</span>
+                  <div className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+                    <Image
+                      src={lesson?.author?.image || "/placeholder-avatar.png"}
+                      alt={lesson?.author?.name}
+                      width={100}
+                      height={100}
+                      className={"block aspect-square w-7 rounded-full"}
+                    />
+                    <div className="flex flex-col gap-1">
+                      <span className="text-foreground">
+                        {lesson?.author?.name}
+                      </span>
+                      <div className="flex items-center gap-1 text-xs font-normal">
+                        <Calendar className="w-3 h-3" />
+                        <span>
+                          {moment(lesson.createdAt).format(
+                            "DD MMM YYYY [at] hh:mma",
+                          )}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
 
