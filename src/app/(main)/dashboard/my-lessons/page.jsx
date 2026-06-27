@@ -25,7 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Edit, Trash2, Eye } from "lucide-react";
+import { Edit, Trash2, Eye, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 export default function MyLessonsPage() {
@@ -75,7 +75,12 @@ export default function MyLessonsPage() {
   };
 
   if (isLoading)
-    return <p className="text-center py-10">Loading your lessons...</p>;
+    return (
+      <div className="flex flex-col items-center justify-center py-32 space-y-4">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground font-medium">Loading...</p>
+      </div>
+    );
 
   return (
     <div className="space-y-6">
