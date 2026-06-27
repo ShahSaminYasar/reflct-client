@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { clearToken } from "@/lib/token";
 
 export default function Navbar() {
   const { data: session, isPending } = useSession();
@@ -16,7 +17,7 @@ export default function Navbar() {
 
   const handleSignOut = async () => {
     await signOut();
-    localStorage.removeItem("bearer_token");
+    clearToken();
     setDropdownOpen(false);
     toast.success("Logged out successfully");
     router.push("/");

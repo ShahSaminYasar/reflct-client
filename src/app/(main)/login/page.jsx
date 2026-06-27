@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,33 +15,34 @@ import {
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import GoogleAuthButton from "@/components/GoogleAuthButton";
+import { signIn } from "@/lib/authClient";
+import { saveToken } from "@/lib/token";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+      await signIn.email({
+        email: formData.email,
+        password: formData.password,
+        fetchOptions: {
+          onSuccess: (ctx) => {
+            const token = ctx.response.headers.get("set-auth-token");
+            if (token) saveToken(token);
+            toast.success("Welcome back!");
+            router.push("/");
+          },
+          onError: (ctx) => {
+            toast.error(ctx.error.message || "Invalid email or password");
+          },
+        },
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.message || "Invalid credentials");
-      } else {
-        toast.success("Login successful!");
-        window.location.href = "/dashboard";
-      }
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -53,11 +55,8 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-3xl font-bold">Welcome Back</CardTitle>
-          <CardDescription>
-            Sign in to continue your learning journey
-          </CardDescription>
+          <CardDescription>Sign in to continue your journey</CardDescription>
         </CardHeader>
-
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
@@ -73,7 +72,6 @@ export default function LoginPage() {
                 required
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
@@ -87,10 +85,14 @@ export default function LoginPage() {
                 required
               />
             </div>
-
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading}
+              size="lg"
+            >
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Sign In
+              {loading ? "Signing in..." : "Sign In"}
             </Button>
           </form>
 
@@ -115,7 +117,7 @@ export default function LoginPage() {
               href="/register"
               className="text-primary hover:underline font-medium"
             >
-              Create one
+              Sign up
             </Link>
           </p>
         </CardContent>

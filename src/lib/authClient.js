@@ -1,5 +1,6 @@
 import { createAuthClient } from "better-auth/react";
 import { inferAdditionalFields } from "better-auth/client/plugins";
+import { getToken } from "./token";
 
 export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -14,10 +15,7 @@ export const authClient = createAuthClient({
   fetchOptions: {
     auth: {
       type: "Bearer",
-      token: () => {
-        if (typeof window === "undefined") return "";
-        return localStorage.getItem("bearer_token") || "";
-      },
+      token: () => getToken(),
     },
   },
 });
