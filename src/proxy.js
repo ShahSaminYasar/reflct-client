@@ -5,21 +5,18 @@ const protectedRoutes = ["/dashboard", "/pricing"];
 
 export function proxy(request) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("better-auth.session_token")?.value;
+  // Our own first-party cookie — not Better Auth's cross-domain cookie
+  const token = request.cookies.get("ba_token")?.value;
 
-  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
-  const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route),
-  );
+  const isAuthRoute = authRoutes.some((r) => pathname.startsWith(r));
+  const isProtectedRoute = protectedRoutes.some((r) => pathname.startsWith(r));
 
   if (isAuthRoute && token) {
     return NextResponse.redirect(new URL("/", request.url));
   }
-
   if (isProtectedRoute && !token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-
   return NextResponse.next();
 }
 
