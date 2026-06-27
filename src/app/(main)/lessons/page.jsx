@@ -81,7 +81,6 @@ export default function PublicLessonsPage() {
     load();
   }, [currentSearch]);
 
-  // ====== URL Param Push Utility Helper ======
   const updateQueryParams = useCallback(
     (updates) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -97,7 +96,6 @@ export default function PublicLessonsPage() {
           params.set(key, String(value));
         }
       });
-      // Always default change back to page 1 unless pagination is explicitly provided
       if (!updates.hasOwnProperty("page")) {
         params.delete("page");
       }
@@ -106,7 +104,6 @@ export default function PublicLessonsPage() {
     [searchParams, router],
   );
 
-  // ====== Search Input Debouncer Effect ======
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (searchInput !== currentSearch) {
@@ -117,7 +114,6 @@ export default function PublicLessonsPage() {
     return () => clearTimeout(delayDebounceFn);
   }, [searchInput, currentSearch, updateQueryParams]);
 
-  // ====== Main Data Fetch Effect loop handler ======
   useEffect(() => {
     async function fetchLessonsList() {
       try {
@@ -303,10 +299,10 @@ export default function PublicLessonsPage() {
             return (
               <Card
                 key={lesson?._id}
-                className="flex flex-col h-full overflow-hidden transition-shadow hover:shadow-lg pt-0 gap-0 max-w-sm mx-auto"
+                className="flex flex-col h-full overflow-hidden transition-shadow hover:shadow-lg pt-0 gap-0 w-full max-w-sm mx-auto"
               >
                 {/* Fixed Image Wrapper Box Area */}
-                <div className="relative">
+                <div className="relative aspect-video">
                   {lesson.image ? (
                     <Image
                       src={lesson.image}

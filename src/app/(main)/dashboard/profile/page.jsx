@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useSession } from "@/lib/authClient";
@@ -350,7 +349,7 @@ export default function ProfilePage() {
             {publicLessons.map((lesson) => (
               <Card
                 key={lesson._id}
-                className="flex flex-col h-full bg-card hover:shadow-md transition-shadow overflow-hidden pt-0 max-w-sm mx-auto gap-0"
+                className="flex flex-col h-full bg-card hover:shadow-md transition-shadow overflow-hidden pt-0 w-full max-w-sm mx-auto gap-0"
               >
                 <div className="relative aspect-video w-full bg-muted border-b overflow-hidden flex items-center justify-center">
                   {lesson.image ? (

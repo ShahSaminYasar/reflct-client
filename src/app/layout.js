@@ -2,6 +2,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import TanStackQueryProvider from "@/providers/TanStackQueryProvider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const geist = Geist({ subsets: ["latin"] });
 
@@ -14,7 +15,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geist.className} bg-white text-gray-900 antialiased`}>
-        <TanStackQueryProvider>{children}</TanStackQueryProvider>
+        <TanStackQueryProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </TanStackQueryProvider>
         <Toaster position="top-center" duration={2000} />
       </body>
     </html>

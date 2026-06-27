@@ -72,10 +72,7 @@ export default function Navbar() {
                 className="flex items-center gap-2 focus:outline-none"
               >
                 <Image
-                  src={
-                    session?.user?.image ||
-                    `https://ui-avatars.com/api/?name=${session?.user?.name}&background=6366f1&color=fff`
-                  }
+                  src={session?.user?.image || `/placeholder-avatar.png`}
                   alt={session?.user?.name || "User DP"}
                   width={100}
                   height={100}
