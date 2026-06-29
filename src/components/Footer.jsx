@@ -39,7 +39,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/public-lessons"
+                  href="/lessons"
                   className="hover:text-primary transition-colors"
                 >
                   Public Lessons
@@ -103,16 +103,32 @@ const Footer = () => {
               Connect With Us
             </h3>
             <div className="flex gap-4 text-2xl mb-6">
-              <Link href="#" className="hover:text-blue-400 transition-colors">
+              <Link
+                href="https://www.facebook.com/shahsaminyasar"
+                target="_blank"
+                className="hover:text-blue-400 transition-colors"
+              >
                 <FacebookLogoIcon />
               </Link>
-              <Link href="#" className="hover:text-black transition-colors">
+              <Link
+                href="#"
+                target="_blank"
+                className="hover:text-black transition-colors"
+              >
                 <XLogoIcon />
               </Link>
-              <Link href="#" className="hover:text-pink-500 transition-colors">
+              <Link
+                href="http://instagram.com/shah_samin_yasar"
+                target="_blank"
+                className="hover:text-pink-500 transition-colors"
+              >
                 <InstagramLogoIcon />
               </Link>
-              <Link href="#" className="hover:text-blue-600 transition-colors">
+              <Link
+                href="#"
+                target="_blank"
+                className="hover:text-blue-600 transition-colors"
+              >
                 <LinkedinLogoIcon />
               </Link>
             </div>
