@@ -141,7 +141,15 @@ export default function EditLessonPage() {
     }
   };
 
-  if (loading) return <p className="text-center py-10">Loading lesson...</p>;
+  if (loading)
+    return (
+      <div className="flex flex-col items-center justify-center py-32 space-y-4">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground font-medium">
+          Loading lesson data...
+        </p>
+      </div>
+    );
 
   return (
     <div className="max-w-4xl mx-auto">

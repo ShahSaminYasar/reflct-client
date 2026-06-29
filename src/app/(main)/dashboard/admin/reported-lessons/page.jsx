@@ -180,8 +180,7 @@ export default function ReportedLessonsPage() {
               No reported lessons
             </h3>
             <p className="text-xs text-muted-foreground">
-              The platform queue is empty! All active content segments comply
-              with standard safety definitions.
+              Reported posts will appear here.
             </p>
           </div>
         </div>

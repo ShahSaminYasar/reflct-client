@@ -42,7 +42,7 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 
-export default function ProfilePage() {
+export default function ProfilePage({ userId = null }) {
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -60,7 +60,7 @@ export default function ProfilePage() {
     if (!user?.id) return;
     try {
       setIsLoadingProfile(true);
-      const res = await apiFetch(`/api/profile/${user.id}`);
+      const res = await apiFetch(`/api/profile/${userId ?? user?.id}`);
       if (res?.ok) {
         setProfileData(res.data);
         setEditName(res.data.user?.name || "");
@@ -73,7 +73,7 @@ export default function ProfilePage() {
     } finally {
       setIsLoadingProfile(false);
     }
-  }, [user.id]);
+  }, [user?.id]);
 
   useEffect(() => {
     const load = () => {
@@ -96,6 +96,8 @@ export default function ProfilePage() {
       toast.error("Name field cannot be empty");
       return;
     }
+
+    if (userId) return;
 
     try {
       setIsSaving(true);
@@ -161,11 +163,9 @@ export default function ProfilePage() {
   const fallbackAvatar = `/placeholder-avatar.png`;
 
   return (
-    <div className="space-y-10 max-w-5xl mx-auto">
-      {/* PROFILE HEAD INFO BLOCK */}
-      <div className="relative border rounded-2xl p-6 md:p-8 bg-card shadow-sm overflow-hidden">
+    <div className={`space-y-10 max-w-5xl mx-auto ${userId ? "py-10" : ""}`}>
+      <div className="relative border rounded-2xl p-6 md:p-8 bg-card overflow-hidden">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
-          {/* Avatar Container */}
           <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-background bg-muted overflow-hidden shrink-0 shadow-sm">
             <Image
               src={profileUser.image || fallbackAvatar}
@@ -231,7 +231,7 @@ export default function ProfilePage() {
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full md:w-auto text-xs mt-2 md:mt-0"
+                className={`w-full md:w-auto text-xs mt-2 md:mt-0 ${userId ? "hidden" : "flex"}`}
               >
                 <Edit3 className="w-3.5 h-3.5 mr-1.5" /> Edit Profile
               </Button>
@@ -323,11 +323,10 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      {/* PUBLIC LESSONS GRID SUBSECTION */}
       <div className="space-y-6">
         <div>
           <h2 className="text-xl font-bold tracking-tight">
-            My Public Lessons
+            {!userId && "My "}Public Lessons
           </h2>
         </div>
 
@@ -339,8 +338,7 @@ export default function ProfilePage() {
             <div className="space-y-1">
               <p className="text-sm font-semibold">No public documents found</p>
               <p className="text-xs text-muted-foreground max-w-xs mx-auto">
-                Any public visibility configurations created will appear
-                dynamically inside this dashboard stream.
+                Any public post/s will appear here.
               </p>
             </div>
           </div>
@@ -352,19 +350,13 @@ export default function ProfilePage() {
                 className="flex flex-col h-full bg-card hover:shadow-md transition-shadow overflow-hidden pt-0 w-full max-w-sm mx-auto gap-0"
               >
                 <div className="relative aspect-video w-full bg-muted border-b overflow-hidden flex items-center justify-center">
-                  {lesson.image ? (
-                    <Image
-                      src={lesson.image}
-                      alt={lesson.title}
-                      className="w-full h-full object-cover"
-                      width={300}
-                      height={300}
-                    />
-                  ) : (
-                    <span className="text-xs text-muted-foreground">
-                      No Media Provided
-                    </span>
-                  )}
+                  <Image
+                    src={lesson?.image || "/placeholder-thumbnail.png"}
+                    alt={lesson.title}
+                    className="w-full h-full object-cover"
+                    width={300}
+                    height={300}
+                  />
                 </div>
 
                 <CardHeader className="p-4 space-y-0 flex-1">

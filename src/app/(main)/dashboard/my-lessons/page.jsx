@@ -25,13 +25,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Edit, Trash2, Eye, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "@/lib/authClient";
 
 export default function MyLessonsPage() {
+  const { data: session } = useSession();
+
   const {
     data: lessons,
     isLoading,
-    isError,
-    error,
     refetch,
   } = useQuery({
     queryKey: ["my-lessons"],
@@ -69,6 +70,22 @@ export default function MyLessonsPage() {
       refetch();
     } catch (error) {
       toast.error("Failed to update visibility");
+    }
+  };
+
+  const toggleAccessLevel = async (lessonId, currentAccessLevel) => {
+    try {
+      const newAccessLevel = currentAccessLevel === "free" ? "premium" : "free";
+      await apiFetch(`/api/lessons/${lessonId}/access-level`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          accessLevel: !session?.user?.isPremium ? "free" : newAccessLevel,
+        }),
+      });
+      toast.success("Access level updated");
+      refetch();
+    } catch (error) {
+      toast.error("Failed to update access level");
     }
   };
 
@@ -151,7 +168,16 @@ export default function MyLessonsPage() {
                           ? "destructive"
                           : "outline"
                       }
-                      className={"capitalize"}
+                      className={"capitalize cursor-pointer"}
+                      onClick={() => {
+                        if (!session?.user?.isPremium) {
+                          toast.warning(
+                            "You need to upgrade to premium to access this feature.",
+                          );
+                          return;
+                        }
+                        toggleAccessLevel(lesson._id, lesson?.accessLevel);
+                      }}
                     >
                       {lesson.accessLevel}
                     </Badge>

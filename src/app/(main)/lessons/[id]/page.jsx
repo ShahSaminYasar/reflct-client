@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "@/lib/authClient";
 import { apiFetch } from "@/lib/apiFetch";
@@ -39,8 +39,10 @@ import {
   Edit,
   ArrowLeft,
   Send,
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
+import moment from "moment";
 
 export default function LessonDetailsPage() {
   const { id } = useParams();
@@ -91,7 +93,6 @@ export default function LessonDetailsPage() {
     onError: () => toast.error("Failed to toggle like"),
   });
 
-  // ====== Favorite Mutation ======
   const toggleFavoriteMutation = useMutation({
     mutationFn: async () => {
       const res = await apiFetch(`/api/lessons/${id}/favorite`, {
@@ -106,7 +107,6 @@ export default function LessonDetailsPage() {
     onError: () => toast.error("Failed to toggle favorite"),
   });
 
-  // ====== Report Mutation ======
   const reportMutation = useMutation({
     mutationFn: async (reason) => {
       const res = await apiFetch(`/api/lessons/${id}/report`, {
@@ -124,7 +124,6 @@ export default function LessonDetailsPage() {
     onError: (err) => toast.error(err.message || "Failed to submit report"),
   });
 
-  // ====== Post Comment Mutation ======
   const postCommentMutation = useMutation({
     mutationFn: async (text) => {
       const res = await apiFetch(`/api/lessons/${id}/comments`, {
@@ -142,7 +141,6 @@ export default function LessonDetailsPage() {
     onError: (err) => toast.error(err.message || "Failed to post comment"),
   });
 
-  // ====== Delete Lesson Mutation ======
   const deleteLessonMutation = useMutation({
     mutationFn: async () => {
       const res = await apiFetch(`/api/lessons/${id}`, { method: "DELETE" });
@@ -168,25 +166,40 @@ export default function LessonDetailsPage() {
     reportMutation.mutate(reportReason);
   };
 
+  const isAuthor = lessonData?.authorId === currentUserId;
+
+  useEffect(() => {
+    if (
+      !isAuthor &&
+      lessonData?.accessLevel === "premium" &&
+      !session?.user?.isPremium
+    ) {
+      toast.warning("You need to be a premium user to access this content");
+      router.push("/pricing");
+    }
+  }, [isAuthor, lessonData, session, router]);
+
   if (isLessonLoading)
     return (
-      <p className="text-center py-20 text-muted-foreground">
-        Loading lesson details...
-      </p>
+      <div className="flex flex-col items-center justify-center py-32 space-y-4">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground font-medium">
+          Loading lesson data...
+        </p>
+      </div>
     );
+
   if (isLessonError || !lessonData)
     return (
       <p className="text-center py-20 text-destructive">
-        Failed to find this lesson.
+        Failed to fetch this lesson.
       </p>
     );
 
-  const isAuthor = lessonData.authorId === currentUserId;
-  const isLikedByMe = lessonData.likes?.includes(currentUserId);
+  const isLikedByMe = lessonData?.likes?.includes(currentUserId);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
-      {/* Back Button and Author Controls */}
       <div className="flex justify-between items-center">
         <Button variant="ghost" size="sm" asChild>
           <Link
@@ -241,9 +254,8 @@ export default function LessonDetailsPage() {
         )}
       </div>
 
-      {/* Lesson Header Banner */}
-      <div className="relative rounded-xl overflow-hidden border bg-muted aspect-video max-h-95 w-full">
-        {lessonData.image ? (
+      {lessonData?.image && (
+        <div className="relative rounded-xl overflow-hidden border bg-muted aspect-video max-h-95 w-full">
           <Image
             src={lessonData.image}
             alt={lessonData.title}
@@ -252,15 +264,15 @@ export default function LessonDetailsPage() {
             height={720}
             loading="eager"
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-            No Image Provided
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Metadata & Title */}
       <div className="space-y-4">
+        <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
+          {lessonData.title}
+        </h1>
+
         <div className="flex flex-wrap gap-2">
           <Badge variant="secondary" className="capitalize">
             {lessonData.category}
@@ -284,10 +296,6 @@ export default function LessonDetailsPage() {
           </Badge>
         </div>
 
-        <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
-          {lessonData.title}
-        </h1>
-
         {/* Creator Info */}
         {lessonData.author && (
           <div className="flex items-center gap-3 py-2 border-y">
@@ -299,8 +307,14 @@ export default function LessonDetailsPage() {
               height={120}
             />
             <div>
-              <div className="flex items-center gap-1.5 font-medium text-sm">
-                {lessonData.author.name}
+              <Link
+                href={`/author/${lessonData?.authorId}`}
+                className="flex items-center gap-1.5 font-medium text-sm"
+              >
+                {lessonData.author.name}{" "}
+                <span className="italic font-normal">
+                  ({lessonData?.author?.totalPosts} posts)
+                </span>
                 {lessonData.author.isPremium && (
                   <Badge
                     variant="premium"
@@ -309,11 +323,16 @@ export default function LessonDetailsPage() {
                     PRO
                   </Badge>
                 )}
+              </Link>
+              <div className="flex gap-1">
+                <p className="text-xs text-muted-foreground">
+                  Published:{" "}
+                  {moment(lessonData?.createdAt).format("DD MMM YYYY")} |
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Updated: {moment(lessonData?.updatedAt).format("DD MMM YYYY")}
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Published on{" "}
-                {new Date(lessonData.createdAt).toLocaleDateString()}
-              </p>
             </div>
           </div>
         )}
