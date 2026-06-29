@@ -11,7 +11,6 @@ import {
   Sparkles,
   ArrowRight,
   Loader2,
-  ShieldCheck,
   Gem,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -41,7 +40,6 @@ export default function PricingPage() {
   const router = useRouter();
   const [loadingCheckout, setLoadingCheckout] = useState(false);
 
-  // Loading state while checking session auth status
   if (isPending) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background text-foreground">
@@ -265,23 +263,33 @@ export default function PricingPage() {
                       ))}
                     </ul>
 
-                    <Button
-                      onClick={handleUpgrade}
-                      disabled={loadingCheckout}
-                      className="w-full text-xs font-semibold h-10 rounded-xl bg-primary hover:bg-primary/95 text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 group"
-                    >
-                      {loadingCheckout ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          Upgrade to Premium
-                          <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
-                        </>
-                      )}
-                    </Button>
+                    <form action="/api/checkout_sessions" method="POST">
+                      <input
+                        type="hidden"
+                        name="user_email"
+                        value={session?.user?.email}
+                      />
+                      <section>
+                        <Button
+                          disabled={loadingCheckout}
+                          type="submit"
+                          role="link"
+                          className="w-full text-xs font-semibold h-10 rounded-xl bg-primary hover:bg-primary/95 text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 group"
+                        >
+                          {loadingCheckout ? (
+                            <>
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                              Processing...
+                            </>
+                          ) : (
+                            <>
+                              Upgrade to Premium
+                              <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                            </>
+                          )}
+                        </Button>
+                      </section>
+                    </form>
                   </CardContent>
                 </Card>
               </motion.div>
