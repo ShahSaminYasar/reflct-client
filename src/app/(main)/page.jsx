@@ -121,23 +121,13 @@ export default function HomePage() {
       >
         {/* Fixed Image Wrapper Box Area */}
         <div className="relative aspect-video">
-          {lesson.image ? (
-            <Image
-              src={lesson?.image}
-              alt={lesson?.title || "Lesson title"}
-              className={`w-full h-full aspect-video object-cover transition-all ${isLockedPremium ? "blur-sm" : ""}`}
-              width={500}
-              height={500}
-            />
-          ) : (
-            <div
-              className={`w-full h-full bg-linear-to-br from-indigo-100 to-purple-50 dark:from-zinc-900 dark:to-zinc-800 flex items-center justify-center ${isLockedPremium ? "blur-sm" : ""}`}
-            >
-              <span className="text-[11px] tracking-wider text-muted-foreground font-semibold uppercase">
-                Reflct Lesson
-              </span>
-            </div>
-          )}
+          <Image
+            src={lesson?.image || "/placeholder-thumbnail.png"}
+            alt={lesson?.title || "Lesson title"}
+            className={`w-full h-full aspect-video object-cover transition-all ${isLockedPremium ? "blur-sm" : ""}`}
+            width={500}
+            height={500}
+          />
 
           <div className="absolute top-2 right-2 z-10">
             {lesson.accessLevel === "premium" ? (
@@ -363,8 +353,7 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* 5. MOST SAVED LESSONS (DYNAMIC) */}
-      <section className="py-16 sm:py-20 px-4 w-full bg-slate-50 dark:bg-zinc-900/40 border-t border-slate-100 dark:border-zinc-800">
+      <section className="py-16 sm:py-20 px-4 w-full bg-slate-50 dark:bg-zinc-900 border-t border-slate-100 dark:border-zinc-800">
         <div className="max-w-7xl mx-auto">
           <div className="text-center space-y-2 mb-12">
             <div className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider">

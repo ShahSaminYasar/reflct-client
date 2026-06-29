@@ -16,7 +16,7 @@ const Footer = () => {
           <div className="space-y-4">
             <Link
               href="/"
-              className="text-4xl font-bold tracking-tight text-gray-900 mb-3 block"
+              className="text-4xl font-bold tracking-tight text-foreground mb-3 block"
             >
               Refl<span className="text-indigo-500">ct</span>
             </Link>

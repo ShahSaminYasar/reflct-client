@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { clearToken } from "@/lib/token";
 import { Spinner } from "./ui/spinner";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
   const { data: session, isPending } = useSession();
@@ -32,18 +33,18 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="w-full bg-white border-b border-gray-100 sticky top-0 z-50">
+    <nav className="w-full bg-background border-b border-border sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between md:grid md:grid-cols-5 gap-5 h-18">
         {/* Logo */}
         <Link
           href="/"
-          className="text-3xl font-bold tracking-tight text-gray-900"
+          className="text-3xl font-bold tracking-tight text-foreground"
         >
           Refl<span className="text-indigo-500">ct</span>
         </Link>
 
         {/* Desktop Nav Links */}
-        <div className="hidden md:flex md:col-span-3 justify-center items-center gap-7 text-sm font-medium text-gray-600">
+        <div className="hidden md:flex md:col-span-3 justify-center items-center gap-7 text-sm font-medium text-foreground/80">
           <Link href="/" className="hover:text-indigo-500 transition-colors">
             Home
           </Link>
@@ -63,6 +64,8 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center justify-end gap-3">
+          <ThemeToggle />
+
           {isPending ? (
             <Spinner />
           ) : session?.user ? (

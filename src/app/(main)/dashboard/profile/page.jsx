@@ -164,7 +164,9 @@ export default function ProfilePage({ userId = null }) {
   const fallbackAvatar = `/placeholder-avatar.png`;
 
   return (
-    <div className={`space-y-10 max-w-5xl mx-auto ${userId ? "py-10" : ""}`}>
+    <div
+      className={`space-y-10 max-w-5xl mx-auto text-foreground ${userId ? "py-10" : ""}`}
+    >
       <div className="relative border rounded-2xl p-6 md:p-8 bg-card overflow-hidden">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
           <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-background bg-muted overflow-hidden shrink-0 shadow-sm">

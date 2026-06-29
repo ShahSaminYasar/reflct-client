@@ -99,7 +99,7 @@ export default function MyLessonsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center text-foreground">
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
             My Lessons
