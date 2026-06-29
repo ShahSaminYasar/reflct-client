@@ -69,7 +69,6 @@ export default function LessonDetailsPage() {
     },
   });
 
-  // ====== Fetch Comments Query ======
   const { data: comments, isLoading: isCommentsLoading } = useQuery({
     queryKey: ["comments", id],
     queryFn: async () => {
@@ -78,7 +77,6 @@ export default function LessonDetailsPage() {
     },
   });
 
-  // ====== Like Mutation ======
   const toggleLikeMutation = useMutation({
     mutationFn: async () => {
       const res = await apiFetch(`/api/lessons/${id}/like`, {
@@ -313,7 +311,8 @@ export default function LessonDetailsPage() {
               >
                 {lessonData.author.name}{" "}
                 <span className="italic font-normal">
-                  ({lessonData?.author?.totalPosts} posts)
+                  ({lessonData?.author?.totalPosts} posts -{" "}
+                  <span className={"underline"}>View all lessons</span>)
                 </span>
                 {lessonData.author.isPremium && (
                   <Badge
@@ -349,7 +348,13 @@ export default function LessonDetailsPage() {
           <Button
             variant={isLikedByMe ? "default" : "outline"}
             size="sm"
-            onClick={() => toggleLikeMutation.mutate()}
+            onClick={() => {
+              if (!session) {
+                toast.warning("Please log in to like");
+                return;
+              }
+              toggleLikeMutation.mutate();
+            }}
             className="flex items-center gap-2"
           >
             <Heart className={`w-4 h-4 ${isLikedByMe ? "fill-current" : ""}`} />
@@ -367,7 +372,7 @@ export default function LessonDetailsPage() {
           </Button>
         </div>
 
-        {!isAuthor && (
+        {session && !isAuthor && (
           <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
             <DialogTrigger asChild>
               <Button
@@ -442,14 +447,13 @@ export default function LessonDetailsPage() {
           <Button
             type="submit"
             disabled={!session || postCommentMutation.isPending}
-            size="sm"
           >
             <Send className="w-4 h-4 mr-1" /> Post
           </Button>
         </form>
 
-        {/* Comments Feed UI */}
-        <div className="space-y-4 max-h-100 overflow-y-auto pr-2">
+        {/* Comments List */}
+        <div className="space-y-4 max-h-100 overflow-y-auto">
           {isCommentsLoading ? (
             <p className="text-sm text-muted-foreground">
               Loading comments feed...
@@ -476,7 +480,9 @@ export default function LessonDetailsPage() {
                     {comment.userName}
                   </span>
                   <span className="text-[11px] text-muted-foreground ml-auto">
-                    {new Date(comment.createdAt).toLocaleDateString()}
+                    {moment(comment?.createdAt).format(
+                      "DD MMM YYYY [at] hh:mma",
+                    )}
                   </span>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed pl-8">

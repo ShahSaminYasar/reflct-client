@@ -41,6 +41,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Image from "next/image";
+import moment from "moment";
 
 export default function ProfilePage({ userId = null }) {
   const { data: session } = useSession();
@@ -406,7 +407,9 @@ export default function ProfilePage({ userId = null }) {
                   <div className="text-[11px] text-muted-foreground flex items-center gap-1 pt-2">
                     <Calendar className="w-3 h-3" />
                     <span>
-                      {new Date(lesson.createdAt).toLocaleDateString()}
+                      {moment(lesson.createdAt).format(
+                        "DD MMM YYYY [at] hh:mma",
+                      )}
                     </span>
                   </div>
                 </CardContent>

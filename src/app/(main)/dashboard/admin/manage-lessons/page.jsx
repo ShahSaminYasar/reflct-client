@@ -164,7 +164,11 @@ export default function ManageLessonsPage() {
       });
 
       if (res?.ok) {
-        toast.success(`Lesson reviewed milestone updated`);
+        toast.success(
+          currentVal
+            ? `Lesson marked as not reviewed`
+            : `Lesson marked as reviewed`,
+        );
       } else {
         throw new Error("Action failed on database update");
       }
@@ -242,7 +246,7 @@ export default function ManageLessonsPage() {
           <CardContent className="p-4 flex items-center justify-between">
             <div className="space-y-0.5">
               <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-                Public Live
+                Public Lessons
               </p>
               <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400">
                 {stats.public}
@@ -256,7 +260,7 @@ export default function ManageLessonsPage() {
           <CardContent className="p-4 flex items-center justify-between">
             <div className="space-y-0.5">
               <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-                Private Stash
+                Private Lessons
               </p>
               <h3 className="text-xl font-bold text-muted-foreground">
                 {stats.private}
@@ -270,7 +274,7 @@ export default function ManageLessonsPage() {
           <CardContent className="p-4 flex items-center justify-between">
             <div className="space-y-0.5">
               <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-                Reported Flags
+                Reported Lessons
               </p>
               <h3 className="text-xl font-bold text-rose-600 dark:text-rose-400">
                 {stats.flagged}
@@ -345,7 +349,7 @@ export default function ManageLessonsPage() {
         </div>
 
         <div className="text-[11px] font-medium text-muted-foreground">
-          Query Filter Matched: {lessons.length} nodes
+          Query Match: {lessons.length} items
         </div>
       </div>
 
@@ -581,9 +585,7 @@ export default function ManageLessonsPage() {
                               </AlertDialogTitle>
                               <AlertDialogDescription>
                                 Are you sure you want to permanently delete
-                                &quot;{lesson.title}&quot; from the Reflct
-                                system infrastructure? This administrative
-                                operation cannot be reversed.
+                                &quot;{lesson.title}&quot;?
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

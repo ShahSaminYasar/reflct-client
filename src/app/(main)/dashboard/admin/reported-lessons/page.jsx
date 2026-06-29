@@ -313,10 +313,9 @@ export default function ReportedLessonsPage() {
                                 Clear Report Flags?
                               </AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to dismiss all flagged
-                                violation metrics for &quot;{lesson.title}
-                                &quot;? The item will remain unchanged on the
-                                platform feed logs.
+                                Are you sure you want to dismiss all reports for
+                                &quot;{lesson.title}
+                                &quot;?
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
@@ -345,7 +344,7 @@ export default function ReportedLessonsPage() {
                               ) : (
                                 <Trash2 className="w-3 h-3 mr-1" />
                               )}
-                              Purge
+                              Delete
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -355,9 +354,8 @@ export default function ReportedLessonsPage() {
                               </AlertDialogTitle>
                               <AlertDialogDescription>
                                 This operation will instantly delete &quot;
-                                {lesson.title}&quot; and strip its accessibility
-                                parameters from the application layer grid
-                                database completely.
+                                {lesson.title}&quot;. The action CANNOT be
+                                undone!
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

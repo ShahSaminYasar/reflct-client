@@ -20,6 +20,12 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function EditLessonPage() {
   const router = useRouter();
@@ -255,34 +261,46 @@ export default function EditLessonPage() {
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <Label>Access Level</Label>
-                  <RadioGroup
-                    value={formData.accessLevel}
-                    onValueChange={(v) =>
-                      setFormData({ ...formData, accessLevel: v })
-                    }
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-3">
-                        <RadioGroupItem value="free" id="f" />
-                        <Label htmlFor="f">Free</Label>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <RadioGroupItem
-                          value="premium"
-                          id="p"
-                          disabled={!isPremium}
-                        />
-                        <Label
-                          htmlFor="p"
-                          className={!isPremium ? "opacity-60" : ""}
-                        >
-                          Premium {!isPremium && "(Upgrade required)"}
-                        </Label>
-                      </div>
-                    </div>
-                  </RadioGroup>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="w-full">
+                          <Select
+                            value={formData.accessLevel}
+                            onValueChange={(v) =>
+                              setFormData({ ...formData, accessLevel: v })
+                            }
+                            disabled={!isPremium}
+                          >
+                            <SelectTrigger
+                              className={
+                                !isPremium
+                                  ? "opacity-60 cursor-not-allowed"
+                                  : ""
+                              }
+                            >
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="free">
+                                Free - Visible to everyone
+                              </SelectItem>
+                              <SelectItem value="premium" disabled={!isPremium}>
+                                Premium - Visible only to Premium users
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </TooltipTrigger>
+                      {!isPremium && (
+                        <TooltipContent>
+                          <p>Upgrade to Premium to create paid lessons.</p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </div>
 

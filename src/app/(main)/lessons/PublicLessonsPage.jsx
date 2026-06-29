@@ -71,7 +71,6 @@ export default function PublicLessonsPage() {
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
-  // ====== Synchronize search input if URL changes externally ======
   useEffect(() => {
     const load = () => {
       setSearchInput(currentSearch);
@@ -241,11 +240,9 @@ export default function PublicLessonsPage() {
         </div>
       </div>
 
-      {/* FEED RESPONSE DATA WORKSPACE GRID */}
       {isLoading ? (
-        /* Skeleton loading grid stream blocks placeholder state */
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 9 }).map((_, index) => (
+          {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
               className="border rounded-xl bg-card overflow-hidden h-102.5 flex flex-col space-y-4 animate-pulse"
