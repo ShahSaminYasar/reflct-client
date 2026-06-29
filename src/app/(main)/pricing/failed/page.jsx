@@ -1,10 +1,9 @@
-// app/payment/cancel/page.tsx
 "use client";
-
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function PaymentCancel() {
+function PaymentCancelContent() {
   const searchParams = useSearchParams();
   const reason = searchParams.get("reason") || "canceled";
 
@@ -21,17 +20,33 @@ export default function PaymentCancel() {
       <div className="mt-8 space-x-4">
         <Link
           href="/pricing"
-          className="block bg-primary text-primary-foreground text-sm px-3 py-2 rounded-sm"
+          className="block bg-primary text-primary-foreground text-sm px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition"
         >
           Try Again
         </Link>
         <Link
           href="/"
-          className="block bg-background text-foreground border text-sm px-3 py-2 rounded-sm my-2"
+          className="block mt-3 bg-background text-foreground border border-border hover:bg-accent text-sm px-6 py-3 rounded-lg font-medium transition"
         >
           Go Home
         </Link>
       </div>
     </div>
+  );
+}
+
+// Main Page Component
+export default function PaymentCancel() {
+  return (
+    <Suspense
+      fallback={
+        <div className="max-w-md mx-auto py-20 text-center">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-muted-foreground">Loading...</p>
+        </div>
+      }
+    >
+      <PaymentCancelContent />
+    </Suspense>
   );
 }
