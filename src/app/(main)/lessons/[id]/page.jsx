@@ -43,6 +43,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import moment from "moment";
+import { ClockIcon } from "@phosphor-icons/react";
 
 export default function LessonDetailsPage() {
   const { id } = useParams();
@@ -52,6 +53,7 @@ export default function LessonDetailsPage() {
   const [commentText, setCommentText] = useState("");
   const [reportReason, setReportReason] = useState("");
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const [estimatedReadingTime, setEstimatedReadingTime] = useState(0);
 
   const currentUserId = session?.user?.id;
 
@@ -164,6 +166,27 @@ export default function LessonDetailsPage() {
     reportMutation.mutate(reportReason);
   };
 
+  const calculateReadingTime = (content) => {
+    if (!content || typeof content !== "string") {
+      return 0;
+    }
+    const WORDS_PER_MINUTE = 150;
+    const wordCount = content.trim().split(/\s+/g).filter(Boolean).length;
+    const minutes = Math.ceil(wordCount / WORDS_PER_MINUTE);
+
+    return Math.max(1, minutes);
+  };
+
+  useEffect(() => {
+    const load = () => {
+      if (!lessonData?.description || lessonData?.description?.length === 0)
+        return;
+      const time = calculateReadingTime(lessonData?.description);
+      setEstimatedReadingTime(time);
+    };
+    load();
+  }, [lessonData?.description]);
+
   const isAuthor = lessonData?.authorId === currentUserId;
 
   useEffect(() => {
@@ -198,7 +221,7 @@ export default function LessonDetailsPage() {
 
   return (
     <div className="bg-background text-foreground">
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
         <div className="flex justify-between items-center">
           <Button variant="ghost" size="sm" asChild>
             <Link
@@ -252,6 +275,12 @@ export default function LessonDetailsPage() {
             </div>
           )}
         </div>
+
+        <p className="text-sm font-light italic text-foreground/70 flex items-center gap-1">
+          <ClockIcon size={15} weight="bold" />
+          Estimated reading time: {estimatedReadingTime} minute
+          {estimatedReadingTime !== 1 ? "s" : ""}
+        </p>
 
         {lessonData?.image && (
           <div className="relative rounded-xl overflow-hidden border bg-muted aspect-video max-h-95 w-full">
