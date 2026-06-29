@@ -15,7 +15,7 @@ import {
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import GoogleAuthButton from "@/components/GoogleAuthButton";
-import { signUp } from "@/lib/authClient";
+import { authClient, signUp } from "@/lib/authClient";
 import { saveToken } from "@/lib/token";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -81,10 +81,14 @@ export default function RegisterPage() {
         password: formData.password,
         image: imageUrl || "",
         fetchOptions: {
-          onSuccess: (ctx) => {
-            const token = ctx.response.headers.get("set-auth-token");
-            if (token) saveToken(token);
-            toast.success("Account created successfully!");
+          onSuccess: async () => {
+            // First get the opaque bearer token to authenticate the next call
+            // then fetch the JWT via authClient.token()
+            const { data, error } = await authClient.token();
+            if (data?.token) {
+              saveToken(data.token);
+            }
+            toast.success("Welcome back!");
             router.push("/");
           },
           onError: (ctx) => {

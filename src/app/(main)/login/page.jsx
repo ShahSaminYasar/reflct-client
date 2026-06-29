@@ -15,7 +15,7 @@ import {
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import GoogleAuthButton from "@/components/GoogleAuthButton";
-import { signIn } from "@/lib/authClient";
+import { authClient, signIn } from "@/lib/authClient";
 import { saveToken } from "@/lib/token";
 import { useRouter } from "next/navigation";
 
@@ -32,9 +32,13 @@ export default function LoginPage() {
         email: formData.email,
         password: formData.password,
         fetchOptions: {
-          onSuccess: (ctx) => {
-            const token = ctx.response.headers.get("set-auth-token");
-            if (token) saveToken(token);
+          onSuccess: async () => {
+            // First get the opaque bearer token to authenticate the next call
+            // then fetch the JWT via authClient.token()
+            const { data, error } = await authClient.token();
+            if (data?.token) {
+              saveToken(data.token);
+            }
             toast.success("Welcome back!");
             router.push("/");
           },

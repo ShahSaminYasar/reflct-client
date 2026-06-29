@@ -1,9 +1,9 @@
 import { createAuthClient } from "better-auth/react";
-import { inferAdditionalFields } from "better-auth/client/plugins";
+import { inferAdditionalFields, jwtClient } from "better-auth/client/plugins";
 import { getToken } from "./token";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_APP_URL,
   plugins: [
     inferAdditionalFields({
       user: {
@@ -11,12 +11,10 @@ export const authClient = createAuthClient({
         role: { type: "string" },
       },
     }),
+    jwtClient(),
   ],
   fetchOptions: {
-    auth: {
-      type: "Bearer",
-      token: () => getToken(),
-    },
+    auth: { type: "Bearer", token: () => getToken() },
   },
 });
 

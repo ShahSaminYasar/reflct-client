@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { signOut, useSession } from "@/lib/authClient";
+import { clearToken } from "@/lib/token";
 
 export default function DashboardLayout({ children }) {
   const { data: session, isPending } = useSession();
@@ -70,6 +71,7 @@ export default function DashboardLayout({ children }) {
 
   const handleLogout = async () => {
     await signOut();
+    clearToken();
     toast.success("Logged out successfully");
     router.push("/");
     setIsSidebarOpen(false);

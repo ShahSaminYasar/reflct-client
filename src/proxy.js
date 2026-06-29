@@ -1,22 +1,43 @@
 import { NextResponse } from "next/server";
+import { jwtVerify, createRemoteJWKSet } from "jose";
 
 const authRoutes = ["/login", "/register"];
 const protectedRoutes = ["/dashboard", "/pricing"];
 
-export function proxy(request) {
+const JWKS = createRemoteJWKSet(
+  new URL(`${process.env.NEXT_PUBLIC_APP_URL}/api/auth/jwks`),
+);
+
+export async function proxy(request) {
   const { pathname } = request.nextUrl;
-  // Our own first-party cookie — not Better Auth's cross-domain cookie
-  const token = request.cookies.get("ba_token")?.value;
 
   const isAuthRoute = authRoutes.some((r) => pathname.startsWith(r));
   const isProtectedRoute = protectedRoutes.some((r) => pathname.startsWith(r));
 
-  if (isAuthRoute && token) {
+  if (!isAuthRoute && !isProtectedRoute) return NextResponse.next();
+
+  const token = request.cookies.get("ba_token")?.value;
+  let isAuthenticated = false;
+
+  if (token) {
+    try {
+      await jwtVerify(token, JWKS, {
+        issuer: process.env.NEXT_PUBLIC_APP_URL,
+        audience: process.env.NEXT_PUBLIC_APP_URL,
+      });
+      isAuthenticated = true;
+    } catch {
+      isAuthenticated = false;
+    }
+  }
+
+  if (isAuthRoute && isAuthenticated) {
     return NextResponse.redirect(new URL("/", request.url));
   }
-  if (isProtectedRoute && !token) {
+  if (isProtectedRoute && !isAuthenticated) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
+
   return NextResponse.next();
 }
 
